@@ -1,57 +1,56 @@
-package net.wareload.mapper.oidc;
+package net.wareload.mapper.oidc
 
-import org.keycloak.models.ClientSessionContext;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.ProtocolMapperModel;
-import org.keycloak.models.UserSessionModel;
-import org.keycloak.protocol.oidc.mappers.*;
-import org.keycloak.provider.ProviderConfigProperty;
-import org.keycloak.representations.IDToken;
+import org.keycloak.models.ClientSessionContext
+import org.keycloak.models.KeycloakSession
+import org.keycloak.models.ProtocolMapperModel
+import org.keycloak.models.UserSessionModel
+import org.keycloak.protocol.oidc.mappers.AbstractOIDCProtocolMapper
+import org.keycloak.protocol.oidc.mappers.OIDCAccessTokenMapper
+import org.keycloak.protocol.oidc.mappers.OIDCAttributeMapperHelper
+import org.keycloak.protocol.oidc.mappers.OIDCIDTokenMapper
+import org.keycloak.protocol.oidc.mappers.UserInfoTokenMapper
+import org.keycloak.provider.ProviderConfigProperty
+import org.keycloak.representations.IDToken
 
-import java.util.ArrayList;
-import java.util.List;
+class CustomProtocolMapper : AbstractOIDCProtocolMapper(), OIDCAccessTokenMapper,
+OIDCIDTokenMapper, UserInfoTokenMapper {
 
-public class CustomProtocolMapper extends AbstractOIDCProtocolMapper implements OIDCAccessTokenMapper,
-        OIDCIDTokenMapper, UserInfoTokenMapper {
-
-    public static final String PROVIDER_ID = "custom-protocol-mapper";
-
-    private static final List<ProviderConfigProperty> configProperties = new ArrayList<>();
-
-    static {
-        OIDCAttributeMapperHelper.addTokenClaimNameConfig(configProperties);
-        OIDCAttributeMapperHelper.addIncludeInTokensConfig(configProperties, CustomProtocolMapper.class);
+    companion object {
+        const val PROVIDER_ID = "custom-protocol-mapper"
+        private val configProperties = mutableListOf<ProviderConfigProperty>().apply {
+            OIDCAttributeMapperHelper.addTokenClaimNameConfig(this)
+            OIDCAttributeMapperHelper.addIncludeInTokensConfig(this, CustomProtocolMapper::class.java)
+        }
     }
 
-    @Override
-    public String getDisplayCategory() {
-        return "Token Mapper";
+    override fun getDisplayCategory(): String {
+        return "Token Mapper"
     }
 
-    @Override
-    public String getDisplayType() {
-        return "Custom Token Mapper";
+    override fun getDisplayType(): String {
+        return "Custom Token Mapper"
     }
 
-    @Override
-    public String getHelpText() {
-        return "Adds a custom text to the claim";
+    override fun getHelpText(): String {
+        return "Adds a custom text to the claim"
     }
 
-    @Override
-    public List<ProviderConfigProperty> getConfigProperties() {
-        return configProperties;
+    override fun getConfigProperties(): List<ProviderConfigProperty> {
+        return CustomProtocolMapper.configProperties
     }
 
-    @Override
-    public String getId() {
-        return PROVIDER_ID;
+    override fun getId(): String {
+        return PROVIDER_ID
     }
 
-    @Override
-    protected void setClaim(IDToken token, ProtocolMapperModel mappingModel,
-                            UserSessionModel userSession, KeycloakSession keycloakSession,
-                            ClientSessionContext clientSessionCtx) {
-        OIDCAttributeMapperHelper.mapClaim(token, mappingModel, "custom");
+    override fun setClaim(
+            token: IDToken,
+            mappingModel: ProtocolMapperModel,
+            userSession: UserSessionModel,
+            keycloakSession: KeycloakSession,
+            clientSessionCtx: ClientSessionContext
+    ) {
+        OIDCAttributeMapperHelper.mapClaim(token, mappingModel, "custom")
     }
 }
+
