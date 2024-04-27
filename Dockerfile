@@ -15,4 +15,4 @@ RUN mvn clean install
 
 FROM quay.io/keycloak/keycloak:24.0.3
 
-COPY --from=builder /workspace/target/*.jar /opt/keycloak/providers/
+COPY --from=builder /workspace/target/*jar-with-dependencies.jar /opt/keycloak/providers/
