@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.wareload</groupId>
-  <artifactId>.</artifactId>
+  <artifactId>better-keycloak-mapper</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <name>Better Keycloak Mapper</name>
@@ -64,6 +64,11 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->

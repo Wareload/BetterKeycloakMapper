@@ -1,0 +1,33 @@
+version: "3.1"
+
+services:
+  keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # http port
+      - "1354:1354" # debug port
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_DRIVER_NAME: postgres
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/kc
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      DEBUG: true
+      DEBUG_PORT: '*:1354'
+    depends_on:
+      - postgres
+    entrypoint: ["/opt/keycloak/bin/kc.sh", "start-dev"]
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kc
+    ports:
+      - "5432:5432"
