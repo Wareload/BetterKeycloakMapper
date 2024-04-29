@@ -1,5 +1,6 @@
 package net.wareload.mapper.oidc
 
+import net.wareload.mapper.utils.Utils
 import org.keycloak.models.ClientSessionContext
 import org.keycloak.models.KeycloakSession
 import org.keycloak.models.ProtocolMapperModel
@@ -51,14 +52,8 @@ class CustomProtocolMapper : AbstractOIDCProtocolMapper(), OIDCAccessTokenMapper
         keycloakSession: KeycloakSession,
         clientSessionCtx: ClientSessionContext
     ) {
-        val clamName = mappingModel.config.get("claim.name")
-        val otherClaims = token.otherClaims[clamName]
-        val map = mutableMapOf("value" + list[pointer].toString() to list[pointer].toString())
-        if (otherClaims != null && otherClaims is Map<*, *>) {
-            for ((key, value) in otherClaims.entries) {
-                map[key.toString()] = value.toString()
-            }
-        }
+        val map = Utils.addExistingClaimsInsteadOfOverride(mappingModel, token)
+        map.put("value" + list[pointer], list[pointer])
         pointer += 1
         OIDCAttributeMapperHelper.mapClaim(token, mappingModel, map)
     }
