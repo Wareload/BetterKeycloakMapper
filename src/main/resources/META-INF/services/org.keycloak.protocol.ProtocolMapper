@@ -1,1 +1,1 @@
-net.wareload.mapper.oidc.CustomProtocolMapper
+net.wareload.mapper.oidc.tokenmapper.ElementOfMultivaluedUserAttribute
